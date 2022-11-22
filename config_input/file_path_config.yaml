@@ -1,0 +1,9 @@
+training_pipeline_config:
+  pipeline_name: credit_defaulter_prediction
+  artifact_dir: artifact
+
+data_ingestion_config:
+  dataset_download_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00350/default%20of%20credit%20card%20clients.xls"
+  dataset_download_dir: data
+  train_dir: train
+  test_dir: test
