@@ -3,10 +3,12 @@ from defaulter_prediction.entity.entity_artifact import DataIngestionArtifact
 from defaulter_prediction.exception import Custom_Defaulter_Exception
 from defaulter_prediction.logger import logging
 
+from zipfile import ZipFile
 from sklearn.model_selection import StratifiedShuffleSplit
 from six.moves import urllib
 import pandas as pd
 import sys
+import tarfile
 import os
 
 
@@ -25,14 +27,40 @@ class DataIngestion():
             download_url= di_config.dataset_download_url
             download_dir = di_config.dataset_download_dir
             saved_dir_path = os.path.join(download_dir, 
-                                            "cc_defaulter_pred_data.xls")
+                                            "CreditCard.xls")
             os.makedirs(download_dir, exist_ok=True)
             logging.info(f"Downloading file from [{download_url}] to [{saved_dir_path}]")
             urllib.request.urlretrieve(download_url, saved_dir_path)
             logging.info(f"File downloaded Successfully")
+            return saved_dir_path
+        except Exception as e:
+            raise Custom_Defaulter_Exception(e, sys)      
+
+    """
+    def extract_zip_data(self, zip_path:str)->str:
+        try:
+            di_config=self.data_ingestion_config
+            extracted_data_dir = di_config.extracted_data_dir
+            os.makedirs(extracted_data_dir, exist_ok=True)
+            with ZipFile(zip_path) as zipObj:
+                zipObj.extractall(path=extracted_data_dir)
+            logging.info(f"Data extracted from {zip_path} to {extracted_data_dir}")
 
         except Exception as e:
-            raise Custom_Defaulter_Exception(e, sys)       
+            raise Custom_Defaulter_Exception(e, sys) 
+
+    def extract_tgz_file(self, path:str)->str:
+        try:
+            di_config=self.data_ingestion_config
+            extracted_data_dir = di_config.extracted_data_dir
+            os.makedirs(extracted_data_dir, exist_ok=True)
+            with tarfile.open(path) as zipObj:
+                zipObj.extractall(path=extracted_data_dir)
+            logging.info(f"Data extracted from {path} to {extracted_data_dir}")
+
+        except Exception as e:
+            raise Custom_Defaulter_Exception(e, sys) 
+    """     
 
 
     def split_data_as_train_test_data(self,):

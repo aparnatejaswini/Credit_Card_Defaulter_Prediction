@@ -1,4 +1,5 @@
 from defaulter_prediction.component.data_ingestion import DataIngestion
+from defaulter_prediction.component.data_validation import DataValidation
 from defaulter_prediction.exception import Custom_Defaulter_Exception
 from defaulter_prediction.logger import logging
 from defaulter_prediction.entity.entity_config import DataIngestionConfig
@@ -20,6 +21,16 @@ class Pipeline():
         except Exception as e:
             raise Custom_Defaulter_Exception(e,sys)
 
+    def start_data_validation(self, data_ingestion_artifact):
+        try:
+            logging.info("Starting data_validation")
+            dv_conf = self.conf.get_data_validation_config()
+            return DataValidation(dv_conf, data_ingestion_artifact=data_ingestion_artifact).initiate_data_validation()
+        except Exception as e:
+            raise Custom_Defaulter_Exception(e, sys)
+
 
     def run_pipeline(self, ):
-        self.start_data_ingestion()
+        logging.info(f"{'='*20} Training Pipeline Started {'='*20}")
+        di_artifact = self.start_data_ingestion()
+        self.start_data_validation(di_artifact)

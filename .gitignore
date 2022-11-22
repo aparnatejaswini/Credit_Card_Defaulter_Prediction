@@ -129,4 +129,7 @@ dmypy.json
 .pyre/
 #data
 artifact/
-Logs
+Logs/
+Untitled.ipynb
+Untitled1.ipynb
+

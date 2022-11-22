@@ -5,5 +5,12 @@ training_pipeline_config:
 data_ingestion_config:
   dataset_download_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00350/default%20of%20credit%20card%20clients.xls"
   dataset_download_dir: data
+  ingested_data_dir: ingested_data
   train_dir: train
   test_dir: test
+
+data_validation_config:
+  schema_dir: config_input
+  schema_file_name: schema_file_path.yaml
+  report_file_name: report.json
+  report_page_file_name: report.html
