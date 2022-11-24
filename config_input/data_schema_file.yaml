@@ -1,51 +1,45 @@
-SampleFileName: "CreditCardFraud_20211209_010222.csv"
-LengthOfDateStampInFile: 8
-LengthOfTimeStampInFile: 6
-NoOfColumns: 25
-ColumnNames:
-    ID:        integer
-    LIMIT_BAL: integer
-    SEX:       integer
-    EDUCATION: integer
-    MARRIAGE:  integer
-    AGE:       integer
-    PAY_0:     integer
-    PAY_2:     integer
-    PAY_3:     integer
-    PAY_4:     integer
-    PAY_5:     integer
-    PAY_6:     integer
-    BILL_AMT1: integer
-    BILL_AMT2: integer
-    BILL_AMT3: integer
-    BILL_AMT4: integer
-    BILL_AMT5: integer
-    BILL_AMT6: integer
-    PAY_AMT1:  integer
-    PAY_AMT2:  integer
-    PAY_AMT3:  integer
-    PAY_AMT4:  integer
-    PAY_AMT5:  integer
-    PAY_AMT6 : integer
-    default payment next month :   integer
-
+columns:
+    ID: int
+    LIMIT_BAL: float
+    SEX: category
+    EDUCATION: category
+    MARRIAGE: category
+    AGE: int
+    PAY_0: category
+    PAY_2: category
+    PAY_3: category
+    PAY_4: category
+    PAY_5: category
+    PAY_6: category
+    BILL_AMT1: float
+    BILL_AMT2: float
+    BILL_AMT3: float
+    BILL_AMT4: float
+    BILL_AMT5: float
+    BILL_AMT6: float
+    PAY_AMT1: float
+    PAY_AMT2: float
+    PAY_AMT3: float
+    PAY_AMT4: float
+    PAY_AMT5: float
+    PAY_AMT6: float
 
 numerical_columns:
     ID: int
-    LIMIT_BAL: int
+    LIMIT_BAL: float
     AGE: int
-    BILL_AMT1: int
-    BILL_AMT2: int
-    BILL_AMT3: int
-    BILL_AMT4: int
-    BILL_AMT5: int
-    BILL_AMT6: int
-    PAY_AMT1: int
-    PAY_AMT2: int
-    PAY_AMT3: int
-    PAY_AMT4: int
-    PAY_AMT5: int
-    PAY_AMT6: int
+    BILL_AMT1: float
+    BILL_AMT2: float
+    BILL_AMT3: float
+    BILL_AMT4: float
+    BILL_AMT5: float
+    BILL_AMT6: float
+    PAY_AMT1: float
+    PAY_AMT2: float
+    PAY_AMT3: float
+    PAY_AMT4: float
+    PAY_AMT5: float
+    PAY_AMT6: float
 
 categorical_columns:
     SEX: category
@@ -71,20 +65,15 @@ domain_values:
     2: university
     3: high school
     4: others
-    5: others-Contact data owner for further clarification
-    6: others-Contact data owner for further clarification
-    0: others-Contact data owner for further clarification
   
   MARRIAGE:
     1: married
     2: single
     3: others
-    0: others-Contact data owner for further clarification
 
-  PAY_0: 
+  PAY_0: Repayment status in September, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -95,10 +84,9 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-  PAY_2: 
+  PAY_2: Repayment status in August, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -109,10 +97,9 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-  PAY_3:
+  PAY_3: Repayment status in July, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -123,10 +110,9 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-  PAY_4: 
+  PAY_4: Repayment status in June, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -137,10 +123,9 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-  PAY_5: 
+  PAY_5: Repayment status in May, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -151,10 +136,9 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-  PAY_6: 
+  PAY_6: Repayment status in April, 2005
     -2: No Consumption
     -1: pay duly 
-    0: use of revolving credit
     1: payment delay for one month
     2: payment delay for two months, … 
     3: payment delay for three months 
@@ -164,5 +148,3 @@ domain_values:
     7: payment delay for seven months 
     8: payment delay for eight months 
     9: payment delay for nine months and above
-
-

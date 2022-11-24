@@ -2,17 +2,28 @@ from defaulter_prediction.entity.entity_config import DataIngestionConfig
 from defaulter_prediction.entity.entity_artifact import DataIngestionArtifact
 from defaulter_prediction.exception import Custom_Defaulter_Exception
 from defaulter_prediction.logger import logging
+from defaulter_prediction.constants import CURRENT_TIME_STAMP
+#from zipfile import ZipFile
+#import tarfile
 
-from zipfile import ZipFile
 from sklearn.model_selection import StratifiedShuffleSplit
 from six.moves import urllib
 import pandas as pd
 import sys
-import tarfile
 import os
 
 
 class DataIngestion():
+
+    """
+    This class shall be used for 
+    - Obtaining the data from source. 
+    - To split data as train and test sets for training.
+
+    written by: Aparna T Parkala
+    Version:1.0
+
+    """
     def __init__(self, data_ingestion_config:DataIngestionConfig):
         try:
             logging.info(f"{'='*20} Data Ingestion log Started {'='*20}")
@@ -23,6 +34,10 @@ class DataIngestion():
     
     def download_data(self,)->str:
         try:
+            """
+            This method obtains data from web url mentioned in file 'file_path_config.yaml'
+            returns saved data file path.
+            """
             di_config = self.data_ingestion_config
             download_url= di_config.dataset_download_url
             download_dir = di_config.dataset_download_dir
@@ -63,7 +78,12 @@ class DataIngestion():
     """     
 
 
-    def split_data_as_train_test_data(self,):
+    def split_data_as_train_test_data(self,)->DataIngestionArtifact:
+        """
+        This method accesses downloaded data and splits data file into train and test sets.
+        Uses stratified shuffle split based on the problem statement.
+        returns DataIngestionArtifact tuple which contains train and test file paths
+        """
         try:
             di_config = self.data_ingestion_config
             data_dir = di_config.dataset_download_dir
@@ -80,8 +100,9 @@ class DataIngestion():
                 strat_train_set = df.loc[train_idx]
                 strat_test_set = df.loc[test_idx]
 
-            train_file_path = os.path.join(di_config.train_dir, "train.csv")
-            test_file_path = os.path.join(di_config.test_dir, "test.csv")
+            train_file_path = os.path.join(di_config.train_dir, f"creditCardTrain_{CURRENT_TIME_STAMP}.csv")
+            test_file_path = os.path.join(di_config.test_dir, f"creditCardfTest_{CURRENT_TIME_STAMP}.csv")
+            
 
             if strat_train_set is not None:
                 os.makedirs(di_config.train_dir, exist_ok=True)
@@ -106,6 +127,10 @@ class DataIngestion():
 
 
     def initiate_data_ingestion(self,):
+        """
+        calls download_data() and split_data_as_train_test_data()
+        returns DataIngestionArtifact named tuple
+        """
         try:
             self.download_data()
             return self.split_data_as_train_test_data()

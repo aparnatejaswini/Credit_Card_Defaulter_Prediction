@@ -1,5 +1,5 @@
 from defaulter_prediction.constants import *
-from defaulter_prediction.entity.entity_config import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig
+from defaulter_prediction.entity.entity_config import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig, DataTransformationConfig
 from defaulter_prediction.exception import Custom_Defaulter_Exception
 from defaulter_prediction.logger import logging
 from defaulter_prediction.util import read_yaml_file
@@ -13,8 +13,9 @@ class Configuration():
                          current_time_stamp:str=CURRENT_TIME_STAMP)-> None:
         try:
             self.config_info = read_yaml_file(file_path=CONFIG_FILE_PATH)
-            self.training_pipeline_config = self.get_training_pipeline_config()
             self.current_time_stamp = CURRENT_TIME_STAMP
+            self.training_pipeline_config = self.get_training_pipeline_config()
+
 
         except Exception as e:
             raise Custom_Defaulter_Exception(e,sys)
@@ -72,6 +73,8 @@ class Configuration():
             schema_file_path =  os.path.join(ROOT_DIR,
                                              dv_config[DATA_VALIDATION_SCHEMA_DIR_KEY],
                                              dv_config[DATA_VALIDATION_SCHEMA_FILE_NAME_KEY]) 
+            good_data_dir = os.path.join(data_validation_artifact_dir,
+                                            dv_config[DATA_VALIDATION_GOOD_DATA_KEY])
             
             report_file_path = os.path.join(data_validation_artifact_dir,
                                             dv_config[DATA_VALIDATION_REPORT_FILE_NAME_KEY])
@@ -80,11 +83,43 @@ class Configuration():
                                                  dv_config[DATA_VALIDATION_REPORT_PAGE_FILE_NAME_KEY])
 
             Data_Validation_Config = DataValidationConfig(schema_file_path=schema_file_path,
+                                                            good_data_path=good_data_dir,
                                                           report_file_path=report_file_path,
                                                           report_page_file_path=report_page_file_path)
             logging.info(f"Data validation config: {Data_Validation_Config}")
             return Data_Validation_Config
             
+        except Exception as e:
+            raise Custom_Defaulter_Exception(e, sys)
+
+
+    def get_data_transformation_config(self,)->DataTransformationConfig:
+        try:
+            artifact_dir = self.training_pipeline_config.artifact_dir
+
+            dv_artifact_dir = os.path.join(artifact_dir, 
+                                            DATA_TRANSFORMATION_ARTIFACT_DIR,
+                                            self.current_time_stamp)
+
+            dt_config = self.config_info[DATA_TRANSFORMATION_CONFIG_KEY]
+
+            preprocessed_dir = os.path.join(dv_artifact_dir, 
+                                                dt_config[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY],
+                                                dt_config[DATA_TRANSFORMATION_PREPROCESSED_OBJECT_FILE_NAME_KEY])
+
+            transformed_train_dir = os.path.join(dv_artifact_dir, 
+                                                    dt_config[DATA_TRANSFORMATION_TRANSFORMED_DIR_KEY],
+                                                    dt_config[DATA_TRANSFORMATION_TRANSFORMED_TRAIN_DIR_KEY])
+
+            transformed_test_dir = os.path.join(dv_artifact_dir, 
+                                                dt_config[DATA_TRANSFORMATION_TRANSFORMED_DIR_KEY],
+                                                dt_config[DATA_TRANSFORMATION_TRANSFORMED_TEST_DIR_KEY])
+
+            Data_Transformation_Config = DataTransformationConfig(transformed_test_dir=transformed_test_dir,
+                                                                     transformed_train_dir=transformed_train_dir,
+                                                                    preprocessed_object_file_path=preprocessed_dir)
+
+            logging.info(f"Data Transformation Object: {Data_Transformation_Config}")
         except Exception as e:
             raise Custom_Defaulter_Exception(e, sys)
 
@@ -101,7 +136,10 @@ class Configuration():
             artifact_dir = os.path.join(ROOT_DIR,
                                         training_pipeline_config[TRAINING_PIPELINE_ARTIFACT_DIR_KEY]
                                         )
-            Training_Pipeline_Config = TrainingPipelineConfig(pipeline_name=pipeline_name, artifact_dir=artifact_dir)
+            bad_data_dir = os.path.join(artifact_dir, TRAINING_PIPELINE_ARCHIVED_BAD_DATA_KEY, self.current_time_stamp)
+            Training_Pipeline_Config = TrainingPipelineConfig(pipeline_name=pipeline_name, 
+                                                                artifact_dir=artifact_dir, 
+                                                                archived_bad_data_path=bad_data_dir)
             return Training_Pipeline_Config
 
         except Exception as e:
