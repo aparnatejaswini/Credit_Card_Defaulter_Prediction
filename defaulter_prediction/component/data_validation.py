@@ -171,9 +171,26 @@ class DataValidation():
                 domain_val_validated = False
             else:
                 domain_val_validated = True
-            
-            domain_val_validated=True
-            validation_status = file_name_validated and num_cols_validated and col_names_validated and domain_val_validated
+
+            #Check if entire column has missing values
+            null_val_col_validated = set()
+            logging.info("Checking if entire column has missing values")
+            for col in schema_config['ColumnNames']:
+                if train_df[col].isnull().sum()!=len(train_df[col]):
+                    null_val_col_validated.add(True)
+                    logging.info(f"column: {col} validated successfully.")
+                else:
+                    null_val_col_validated.add(False)
+                    logging.info(f"file doesn't have any values in column {col}\n\
+                                    Data validation unsuccessful. moving data to bad data folder.")
+            if False in null_val_col_validated:
+                null_col_validated = False
+            else:
+                null_col_validated = True
+
+
+            validation_status = file_name_validated and num_cols_validated and col_names_validated \
+                                    and domain_val_validated and null_col_validated
 
             return validation_status
 
