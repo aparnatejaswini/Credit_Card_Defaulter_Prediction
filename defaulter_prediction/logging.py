@@ -1,6 +1,6 @@
 import logging
 import os
-from defaulter_prediction.constants import CURRENT_TIME_STAMP
+from defaulter_prediction.constants.train_pipeline import CURRENT_TIME_STAMP
 
 def get_log_file_name()->str:
     return f"log_{CURRENT_TIME_STAMP}.log"
