@@ -119,7 +119,7 @@ class Configuration():
                                                                      transformed_train_dir=transformed_train_dir,
                                                                     preprocessed_object_file_path=preprocessed_dir)
 
-            logging.info(f"Data Transformation Object: {Data_Transformation_Config}")
+            logging.info(f"Data Transformation config: {Data_Transformation_Config}")
         except Exception as e:
             raise Custom_Defaulter_Exception(e, sys)
 

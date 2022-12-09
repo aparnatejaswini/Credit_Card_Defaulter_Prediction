@@ -78,8 +78,8 @@ domain_values:
   MARRIAGE:
     1: married
     2: single
-    3: others
-    0: others-Contact data owner for further clarification
+    3: divorced
+    0: others
 
   PAY_0: 
     -2: No Consumption
