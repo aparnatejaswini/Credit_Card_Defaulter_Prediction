@@ -7,3 +7,4 @@ flask
 pyyaml
 scipy
 evidently
+cassandra-driver

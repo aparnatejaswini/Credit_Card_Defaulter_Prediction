@@ -1,38 +1,57 @@
 from defaulter_prediction.component.data_ingestion import DataIngestion
-from defaulter_prediction.component.data_validation import DataValidation
+#from defaulter_prediction.component.data_validation import DataValidation
 from defaulter_prediction.exception import Custom_Defaulter_Exception
 from defaulter_prediction.logger import logging
-from defaulter_prediction.entity.entity_config import DataIngestionConfig
+from defaulter_prediction.entity.entity_config import TrainingPipelineConfig,DataIngestionConfig
 from defaulter_prediction.entity.entity_artifact import DataIngestionArtifact
-from defaulter_prediction.config.configuration import Configuration
-from defaulter_prediction.constants import CONFIG_FILE_PATH, CURRENT_TIME_STAMP
 import sys
 
 
-class Pipeline():
-    def __init__(self, conf:Configuration()) -> None:
-        self.conf = Configuration(CONFIG_FILE_PATH, CURRENT_TIME_STAMP)
 
-    def start_data_ingestion(self, ):
+
+
+
+class TrainPipeline:
+#    is_pipeline_running=False
+    def __init__(self):
+        self.training_pipeline_config = TrainingPipelineConfig()
+    #    self.s3_sync = S3Sync()
+        
+
+
+    def start_data_ingestion(self)->DataIngestionArtifact:
         try:
+            self.data_ingestion_config = DataIngestionConfig(train_pipeline_config=self.training_pipeline_config)
             logging.info("Starting data ingestion")
-            di_conf = self.conf.get_data_ingestion_config()
-            return DataIngestion(di_conf).initiate_data_ingestion()
-        except Exception as e:
-            raise Custom_Defaulter_Exception(e,sys)
+            data_ingestion = DataIngestion(data_ingestion_config=self.data_ingestion_config)
+            data_ingestion_artifact = data_ingestion.initiate_data_ingestion()
+            logging.info(f"Data ingestion completed and artifact: {data_ingestion_artifact}")
+            return data_ingestion_artifact
+        except  Exception as e:
+            raise  Custom_Defaulter_Exception(e,sys)
 
-    def start_data_validation(self, data_ingestion_artifact, tp_config):
+
+
+    def run_pipeline(self):
         try:
-            logging.info("Starting data_validation")
-            dv_conf = self.conf.get_data_validation_config()
-            return DataValidation(dv_conf, data_ingestion_artifact=data_ingestion_artifact, 
-                                    train_pipeline_config=tp_config).initiate_data_validation()
-        except Exception as e:
-            raise Custom_Defaulter_Exception(e, sys)
+            
+         #   TrainPipeline.is_pipeline_running=True
 
+            data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
+            print(data_ingestion_artifact)
+            #data_validation_artifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
+            """     data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
+            model_eval_artifact = self.start_model_evaluation(data_validation_artifact, model_trainer_artifact)
+            if not model_eval_artifact.is_model_accepted:
+                raise Exception("Trained model is not better than the best model")
+            model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
+            TrainPipeline.is_pipeline_running=False
+            self.sync_artifact_dir_to_s3()
+            self.sync_saved_model_dir_to_s3()
+        """
+        except  Exception as e:
+            #self.sync_artifact_dir_to_s3()
+            #TrainPipeline.is_pipeline_running=False
+            raise  Custom_Defaulter_Exception(e,sys)
 
-    def run_pipeline(self, ):
-        logging.info(f"{'='*20} Training Pipeline Started {'='*20}")
-        di_artifact = self.start_data_ingestion()
-        tp_config = self.conf.get_training_pipeline_config()
-        self.start_data_validation(di_artifact, tp_config)

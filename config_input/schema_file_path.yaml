@@ -165,4 +165,5 @@ domain_values:
     8: payment delay for eight months 
     9: payment delay for nine months and above
 
-
+drop_columns:
+  ID

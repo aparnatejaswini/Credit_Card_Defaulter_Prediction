@@ -9,14 +9,15 @@ class Custom_Defaulter_Exception(Exception):
         super().__init__(error_msg)
         self.error_msg = self.get_detailed_error_msg(error_msg, sys)
 
+    @staticmethod
     def get_detailed_error_msg(self, error_msg:Exception, sys:sys)->Exception:
         """
         returns  error msg, line no, file name in which exception occured.
         """
         f_name = error_msg.__traceback__.tb_frame.f_code.co_filename
-        line_num = error_msg.__traceback__.tb_lineno
+        line_num = error_msg.__traceback_.tb_lineno
 
-        error_message = f"Error message: {error_msg} occured at line [{line_num}] in file: {f_name}\n"
+        error_message = f"Error occured in file: {f_name} at line [{line_num}]\n"
         logging.info(f"{error_message}")
         return error_message
 
